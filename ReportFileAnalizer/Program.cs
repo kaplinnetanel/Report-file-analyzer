@@ -57,8 +57,11 @@ class Magerment
     static bool TryParseEnum(string[] cleanLine, int i, out Status s)
     {
         if (Enum.TryParse<Status>(cleanLine[i].Trim(), true, out s))
-            { return true; }
-        Console.Write($"reason {cleanLine[i]}");
+            {
+                Console.WriteLine(".Valid record processed");
+                return true;
+             }
+        Console.WriteLine($"reason {cleanLine[i]}");
         return false;
     }
 
@@ -67,9 +70,14 @@ class Magerment
 
         if (double.TryParse(cleanLine[i].Trim(), out score))
         { 
-            return score >= 0.0 && score <= 100.0; 
+            if (score >= 0.0 && score <= 100.0)
+            {
+                Console.WriteLine(".Valid record processed");
+                return true;
+
+            }
         }
-        Console.Write($"reason {cleanLine[i]}");
+        Console.WriteLine($"reason {cleanLine[i]}");
         return false;
 
     }
@@ -79,21 +87,53 @@ class Magerment
         if (int.TryParse(cleanLine[i].Trim(), out priority))
         {
             {
-                return priority >= 1 && priority <= 5;
+                if (priority >= 1 && priority <= 5)
+                {
+                    Console.WriteLine(".Valid record processed");
+                    return true;
+                         
+                        
+                }
             }
         }
+        Console.WriteLine("Invalid record: Priority out of range");
         return false;
     }
 
     static bool ParseReportType(string[] cleanLine, int i, out ReportType type)
     {
 
-        return Enum.TryParse<ReportType>(cleanLine[i].Trim(), true, out type);
+        if(Enum.TryParse<ReportType>(cleanLine[i].Trim(), true, out type))
+            {
+                Console.WriteLine(".Valid record processed");
+                return true;
+                
+            }
+            else
+            {
+                Console.WriteLine("Invalid record: Score is not a valid number");
+                return false;
+        
+            }
+    
+    
     }
 
     static bool ParseUnitype(string[] cleanLine, int i)
     {
-        return cleanLine[i].Trim() != null;
+        if (cleanLine[i].Trim() != null)
+        {
+            Console.WriteLine(".Valid record processed");
+            return true;
+        }
+        else
+        { 
+           Console.WriteLine("Invalid record: Score is not a valid number");
+           return false;
+         
+            
+        }
+
     }
 
     static int ProcessReports(string[] lines, string[] unitName, ReportType[] reportType, int[] priority, double[] score, Status[] status)
@@ -118,11 +158,17 @@ class Magerment
                     score[trueCount] = s;
                     status[trueCount] = st;
                     trueCount ++;
-                              ///  Console.Write($"Unit: {cleanLine[0].Trim()}\n Type: {type}\n Priority:{p}\n Score:{s}\n Status:{st} ");
+         
+                    Console.WriteLine($"Unit: {cleanLine[0].Trim()}\n Type: {type}\n Priority:{p}\n Score:{s}\n Status:{st} ");
                 }
             }
+
             count++;
         }
+        Console.WriteLine(".Processing complete");
+        Console.WriteLine($"Valid records: {trueCount}");
+        Console.WriteLine($"Invalid records: {count - trueCount}");
+        Console.WriteLine($".Stored {trueCount} valid records for analysis");
         return trueCount;
     }
 
